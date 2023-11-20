@@ -15,13 +15,29 @@ export default function Home() {
     setCreatedTodo(e.target.value)
   }
 
-  const createdTodos:MouseEventHandler<HTMLButtonElement> = () => {
+  // created todo's
+  const createdTodos: MouseEventHandler<HTMLButtonElement> = () => {
     const newTodo = {
       text: createdTodo,
       complete: false
     }
     setTodos([...Todos, newTodo])
     setCreatedTodo('')
+  }
+
+  // deleted todo's
+  const deletedTodos = (text: string): void => {
+    const newTodo =  Todos.filter(todo => todo.text !== text)
+    setTodos(newTodo)
+  }
+
+  // completed todo's
+  const completedTodos = (text: string): void => {
+    const newTodo = [...Todos]
+    const todoId = Todos.findIndex(todo => todo.text === text)
+    if(!Todos[todoId].complete) Todos[todoId].complete = true
+    else Todos[todoId].complete = false
+    setTodos(newTodo)
   }
  
   return (
@@ -32,11 +48,11 @@ export default function Home() {
       </div>
       <div className="">
         {Todos.map(({text, complete}) => (
-          <ul key={text}>
-            <li key={text}>
-              <p>{text}</p>
-            </li>
-          </ul>
+          <div key={text} className="flex flex-row max-h-screen justify-center items-center mb-4">
+              <p className="w-full">{text}</p>
+              <button type="button" onClick={() => completedTodos(text)} className="bg-gray-500 rounded-lg h-8 w-20 mr-3">completar</button>
+              <button type="button" onClick={() => deletedTodos(text)} className={`${complete ? '' : 'hidden'} bg-gray-500 rounded-lg h-8 w-20`}>deleted</button>
+          </div>
         ))}
       </div>
     </main>
